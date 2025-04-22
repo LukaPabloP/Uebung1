@@ -4,76 +4,75 @@ uses
   SysUtils, Math;
 
 var
-  Schokolade: byte;
-  Gummibaerchen: byte;
-  Bonbons: byte;
+  Suessigkeit1: byte;
+  Suessigkeit2: byte;
+  Suessigkeit3: byte;
   Gesmantsueses: byte;
   benoetigteKinder: byte;
   Rest: boolean;
   Restkinder : byte;
   SuessigkeitenVorhanden: longint;
-  AlleSuessigkeiten: boolean;
+  Allesuessigkeiten: boolean;
   maximum: integer;
   eindeutig_max_suesses: boolean;
   SuessigkeitenLetztesKind: byte;
 
 
 const
-  Esskapazitaet = 6;
+  ESSKAPAZITAET = 6;
 
+  NAME_SCHOKOLADE = 'Schokolade';     // z.B. "Schokohasen"
+  NAME_GUMMIBAERCHEN = 'Gummibaerchen'; // z.B. "Lakritzschnecken"
+  NAME_BONBONS = 'Bonbons';             // z.B. "Kaubonbons"
 
 begin
-  
-  Schokolade := 0;
-  
-  Writeln('Wie viele Schokoladen haben Sie?');
-  readln(Schokolade);
-  Gummibaerchen := 0;
-  
-  Writeln('Wie viele Gummibaerchen haben Sie?');
-  readln(Gummibaerchen);
-  Bonbons := 0;
-  
-  Writeln('Wie viele Bonbons haben Sie?');        //Einzelne Süßigkeiten auf Null setzen und Readln Befehl zum eingeben im terminal
-  readln(Bonbons);
+  // Eingabe der Anzahl jeder Süßigkeit
+  Writeln('Wie viele ', NAME_SCHOKOLADE, ' haben Sie?');
+  readln(Suessigkeit1);
 
-  SuessigkeitenVorhanden := Schokolade * Gummibaerchen * Bonbons;   //Variable für das Prüfen ob alle Süßigkeiten Vorhanden sind, multiplizieren im 0 faktor ganze variable gleich 0
-  Gesmantsueses := Schokolade + Gummibaerchen + Bonbons;  //Berechnung der insgesamt Anzahl der Süßigkeiten
-  Allesuessigkeiten := boolean(SuessigkeitenVorhanden); //Variable in eine  Boolean Variable für True oder False ausgabe ob alles vorhanden ist
-  Rest := Gesmantsueses mod Esskapazitaet <> 0; //Auswertung ob Rest ungleich 0 und dementsprechent gucken ob Rest vorhanden ist(Rest = boolean)
-  Restkinder := byte(Rest);   //Rest in Byte umwandeln um die Anzahl zu bestimmen und mit Restkinder gleichsetzen
+  Writeln('Wie viele ', NAME_GUMMIBAERCHEN, ' haben Sie?');
+  readln(Suessigkeit2);
 
+  Writeln('Wie viele ', NAME_BONBONS, ' haben Sie?');
+  readln(Suessigkeit3);
+
+  // Prüfung, ob jede Süßigkeit mindestens einmal vorhanden ist
+  SuessigkeitenVorhanden := Suessigkeit1 * Suessigkeit2 * Suessigkeit3;
+  Gesmantsueses := Suessigkeit1 + Suessigkeit2 + Suessigkeit3;
+  Allesuessigkeiten := boolean(SuessigkeitenVorhanden);
+
+  // Prüfung auf Restverteilung
+  Rest := Gesmantsueses mod ESSKAPAZITAET <> 0;
+  Restkinder := byte(Rest);
 
   Writeln('Die Gesamtanzahl der Suessigkeiten ist: ', Gesmantsueses);
+  benoetigteKinder := Gesmantsueses div ESSKAPAZITAET + Restkinder;
 
-  benoetigteKinder := Gesmantsueses div Esskapazitaet + Restkinder;
-    Writeln('Es werden insgesammt ', benoetigteKinder, ' Kinder benötigt');
-    Writeln('Ist von jeder Süßigkeit mindestens eins vorhanden: ', Allesuessigkeiten);
-
-  Writeln('Gibt es ein Rest: ', Rest); //Ausgabe der boolean also True oder False
+  Writeln('Es werden insgesamt ', benoetigteKinder, ' Kinder benötigt');
+  Writeln('Ist von jeder Süßigkeit mindestens eins vorhanden: ', Allesuessigkeiten);
+  Writeln('Gibt es einen Rest: ', Rest);
   Writeln('Die Anzahl der Restkinder ist: ', Restkinder);
- 
 
-  SuessigkeitenLetztesKind := (Gesmantsueses mod Esskapazitaet - Esskapazitaet) * byte(Rest) + Esskapazitaet; //berechnung von Rest/Wie viel süßigkeiten das latzte Kind bekommt
-    Writeln('Das letzte Kind bekommt ', SuessigkeitenLetztesKind, ' Suessigkeit(en).');
+  // Berechnung, wie viele Süßigkeiten das letzte Kind bekommt
+  SuessigkeitenLetztesKind := (Gesmantsueses mod ESSKAPAZITAET - ESSKAPAZITAET) * byte(Rest) + ESSKAPAZITAET;
+  Writeln('Das letzte Kind bekommt ', SuessigkeitenLetztesKind, ' Suessigkeit(en).');
 
+  // Bestimmen, welche Süßigkeit am meisten vorhanden ist
+  maximum := max(Suessigkeit1, max(Suessigkeit2, Suessigkeit3));
+  eindeutig_max_suesses := byte(Suessigkeit1 = maximum) +
+                           byte(Suessigkeit2 = maximum) +
+                           byte(Suessigkeit3 = maximum) = 1;
 
+  Writeln;
+  Writeln('Gibt es eine Süßigkeit mit der eindeutigen Mehrheit: ', eindeutig_max_suesses);
 
-  maximum := max(Schokolade, max(Gummibaerchen, Bonbons)); //Prüfen was der größte Wert unter den Süßigkeiten ist
+  // Ausgabe, welche Süßigkeit am meisten vorhanden ist
+  Writeln(NAME_GUMMIBAERCHEN, ' hat die größte Anzahl: ', Suessigkeit2 = maximum);
+  Writeln(NAME_SCHOKOLADE, ' hat die größte Anzahl: ', Suessigkeit1 = maximum);
+  Writeln(NAME_BONBONS, ' hat die größte Anzahl: ', Suessigkeit3 = maximum);
 
-    eindeutig_max_suesses := byte(schokolade = maximum) + byte(Gummibaerchen = maximum) + byte(Bonbons = maximum) =1;
-    writeln;
-  Writeln('Gibt eine Süßigkeit mit der eindeutigen Mehrheit: ', eindeutig_max_suesses);
-
-  
-  writeln('Gummibaerchen hat die größte Anzahl : ', Gummibaerchen = maximum);
-  writeln('Schokoladen hat die größte Anzahl : ', schokolade = maximum);
-  writeln('Bonbons hat die größte Anzahl : ', bonbons = maximum);
-
-  writeln('Gummibaerchen hat die kleinste Anzahl : ', Gummibaerchen = Min(schokolade, Min(Gummibaerchen, bonbons)));
-  writeln('Schokoladen hat die kleinste Anzahl : ', schokolade = Min(schokolade, Min(Gummibaerchen, bonbons)));
-  writeln('Bonbons hat die kleinste Anzahl : ', bonbons = Min(schokolade, Min(Gummibaerchen, bonbons)));
-
-  //Ganzer Block prüft welche Süßigkeit jeweils die Kleinste oder Größte Anzahl hat mit jeweils immer einer Boolean ausgabe
-
+  // Ausgabe, welche Süßigkeit am wenigsten vorhanden ist
+  Writeln(NAME_GUMMIBAERCHEN, ' hat die kleinste Anzahl: ', Suessigkeit2 = Min(Suessigkeit1, Min(Suessigkeit2, Suessigkeit3)));
+  Writeln(NAME_SCHOKOLADE, ' hat die kleinste Anzahl: ', Suessigkeit1 = Min(Suessigkeit1, Min(Suessigkeit2, Suessigkeit3)));
+  Writeln(NAME_BONBONS, ' hat die kleinste Anzahl: ', Suessigkeit3 = Min(Suessigkeit1, Min(Suessigkeit2, Suessigkeit3)));
 end.
